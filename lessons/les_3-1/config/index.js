@@ -8,7 +8,6 @@ const config = {
   ROUTERS: {
     API: "/api",
     POSTS: "/posts",
-    POST: "/post",
   },
 };
 

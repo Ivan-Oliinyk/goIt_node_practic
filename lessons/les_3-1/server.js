@@ -17,12 +17,20 @@ app.use(express.static("./public"));
 app.use(morgan("tiny"));
 app.use(API, routers);
 
-const start = async () => {
-  await connectMongo();
+app.use((error, req, res, next) => {
+  res.status(500).json({ message: error.message });
+});
 
-  app.listen(PORT, () => {
-    console.log(`Server run on port ${PORT} ...`);
-  });
+const start = async () => {
+  try {
+    await connectMongo();
+
+    app.listen(PORT, () => {
+      console.log(`Server run on port ${PORT} ...`);
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
 };
 
 start();

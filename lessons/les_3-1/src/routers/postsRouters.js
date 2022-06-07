@@ -1,6 +1,8 @@
 const router = require("express").Router();
+const { validationPostCreate } = require("../middlewares/validationMiddleware");
+const modalsMiddleware = require("../middlewares/modalsMiddleware");
+const { asyncWrapper } = require("../helpers/");
 
-const config = require("../../config");
 const {
   getAllPosts,
   getPostById,
@@ -9,14 +11,12 @@ const {
   updatePost,
 } = require("../controllers/postsController");
 
-const {
-  ROUTERS: { POSTS, POST },
-} = config;
+router.use(modalsMiddleware);
 
-router.get(POSTS, getAllPosts);
-router.get(`${POST}/:id`, getPostById);
-router.delete(`${POST}/:id`, removePostsById);
-router.post(POST, createPost);
-router.put(`${POST}/:id`, updatePost);
+router.get("/", asyncWrapper(getAllPosts));
+router.get("/:id", asyncWrapper(getPostById));
+router.delete(`/:id`, asyncWrapper(removePostsById));
+router.post("/", validationPostCreate, asyncWrapper(createPost));
+router.put(`/:id`, validationPostCreate, asyncWrapper(updatePost));
 
 module.exports = router;
