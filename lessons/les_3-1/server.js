@@ -1,5 +1,5 @@
 const express = require("express");
-const morgan = require("morgan");
+const logger = require("morgan");
 const routers = require("./src/routers");
 const { connectMongo } = require("./src/db/connection");
 const config = require("./config");
@@ -11,10 +11,12 @@ const {
 
 const app = express();
 
+const formatsLogger = app.get("env") === "development" ? "dev" : "short";
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./public"));
-app.use(morgan("tiny"));
+app.use(logger(formatsLogger));
 app.use(API, routers);
 
 app.use((error, req, res, next) => {

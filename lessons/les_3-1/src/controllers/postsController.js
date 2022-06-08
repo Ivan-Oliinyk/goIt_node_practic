@@ -1,8 +1,7 @@
-const { v4: uuidv4 } = require("uuid");
 const ObjectId = require("mongodb").ObjectId;
 
 const getAllPosts = async (req, res) => {
-  const posts = await req.dbs.Posts.find({}).toArray();
+  const posts = await req.db.Posts.find({}).toArray();
   res.status(200).json({ posts });
 };
 
