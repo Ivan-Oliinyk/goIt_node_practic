@@ -3,6 +3,7 @@ const logger = require("morgan");
 const routers = require("./src/routers");
 const { connectMongo } = require("./src/db/connection");
 const config = require("./config");
+const { errorHandler } = require("./src/helpers");
 
 const {
   PORT,
@@ -18,10 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./public"));
 app.use(logger(formatsLogger));
 app.use(API, routers);
-
-app.use((error, req, res, next) => {
-  res.status(500).json({ message: error.message });
-});
+app.use(errorHandler);
 
 const start = async () => {
   try {

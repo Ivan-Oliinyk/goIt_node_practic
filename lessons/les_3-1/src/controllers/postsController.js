@@ -1,49 +1,54 @@
-const ObjectId = require("mongodb").ObjectId;
+const {
+  getPosts,
+  getPostsById,
+  addPost,
+  changePostById,
+  deletePostById,
+} = require("../services/post.service");
 
-const getAllPosts = async (req, res) => {
-  const posts = await req.db.Posts.find({}).toArray();
+const getAllPostsController = async (req, res) => {
+  const posts = await getPosts();
   res.status(200).json({ posts });
 };
 
-const getPostById = async (req, res) => {
+const getPostByIdController = async (req, res) => {
   const { id } = req.params;
-
-  const post = await req.db.Posts.findOne({ _id: ObjectId(id) });
-
-  if (!post) {
-    return res.status(400).json({ status: `Not found post with id ${id}` });
-  }
+  const post = await getPostsById(id);
 
   res.status(200).json({ post, status: 200 });
 };
 
-const removePostsById = async (req, res) => {
-  await req.db.Posts.deleteOne({ _id: ObjectId(req.params.id) });
-  res.json({ status: "success" });
-};
-
-const createPost = async (req, res) => {
+const createPostController = async (req, res) => {
   const { title, body } = req.body;
-  await req.db.Posts.insertOne({ title, body });
+  const post = await addPost({ title, body });
 
-  res.json({ status: "Post create !" });
+  res.json({ status: 200, message: "Post was created!", data: post });
 };
 
-const updatePost = async (req, res) => {
-  const id = String(req.params.id);
+const updatePostController = async (req, res) => {
+  const { id } = req.params;
+  const { title, body } = req.body;
 
-  await req.db.Posts.updateOne(
-    { _id: ObjectId(id) },
-    { $set: { ...req.body } }
-  );
+  await changePostById(id, { title, body });
 
-  res.json({ status: "Success" });
+  res.json({
+    status: 200,
+    message: `Post with id ${id} was updated!`,
+  });
+};
+
+const removePostsByIdController = async (req, res) => {
+  const { id } = req.params;
+
+  await deletePostById(id);
+
+  res.json({ status: 200, message: `Post with id:${id} was deleted` });
 };
 
 module.exports = {
-  getAllPosts,
-  getPostById,
-  removePostsById,
-  createPost,
-  updatePost,
+  getAllPostsController,
+  getPostByIdController,
+  removePostsByIdController,
+  createPostController,
+  updatePostController,
 };

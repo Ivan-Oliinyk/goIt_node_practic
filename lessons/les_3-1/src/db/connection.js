@@ -1,20 +1,17 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
 const config = require("../../config");
-const collections = {};
 
 const { MONGODB_URL, DB_NAME } = config;
-const getCollections = () => collections;
 
 const connectMongo = async () => {
-  const client = new MongoClient(MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  const db = client.db(DB_NAME);
-
-  collections.Posts = db.collection("posts");
-
-  console.log("Connected to mongodb");
+  return mongoose
+    .connect(MONGODB_URL + "/" + DB_NAME, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("Connected to mongoDB");
+    });
 };
 
-module.exports = { connectMongo, getCollections };
+module.exports = { connectMongo };
