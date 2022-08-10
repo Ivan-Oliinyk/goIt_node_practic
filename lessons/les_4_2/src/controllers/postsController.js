@@ -38,8 +38,9 @@ const createPostController = async (req, res) => {
 const updatePostController = async (req, res) => {
   const { id } = req.params;
   const { title, body } = req.body;
+  const { _id: userId } = req.user;
 
-  await changePostById(id, { title, body });
+  await changePostById(id, { title, body }, userId);
 
   res.json({
     status: 200,

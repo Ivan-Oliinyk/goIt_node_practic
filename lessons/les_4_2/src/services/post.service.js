@@ -26,8 +26,11 @@ const addPost = async ({ title, body }, userId) => {
   await post.save();
 };
 
-const changePostById = async (id, { title, body }) => {
-  const post = await Post.findByIdAndUpdate(id, { $set: { title, body } });
+const changePostById = async (id, { title, body }, userId) => {
+  const post = await Post.findOneAndUpdate(
+    { id, userId },
+    { $set: { title, body } }
+  );
 
   if (!post) {
     throw new WrongParamsError(`Post with id ${id} is not found!`);

@@ -1,28 +1,37 @@
 const mongoose = require("mongoose");
 
-const postSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-    unique: true,
-    required: true,
-  },
+const postSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: String,
+      unique: true,
+      required: true,
+    },
 
-  title: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+    title: {
+      type: String,
+      required: true,
+      unique: true,
+      set: toTrim,
+    },
 
-  body: {
-    type: String,
-    required: true,
+    body: {
+      type: String,
+      required: true,
+      set: toTrim,
+    },
   },
+  {
+    timestamps: {
+      createdAt: "createdAt",
+      updatedAt: "updatedAt",
+    },
+  }
+);
 
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-});
+function toTrim(value) {
+  return String(value).trim();
+}
 
 const Post = mongoose.model("Post", postSchema);
 
