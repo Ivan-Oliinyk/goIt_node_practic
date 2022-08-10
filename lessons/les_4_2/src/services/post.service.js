@@ -6,6 +6,11 @@ const getPosts = async () => {
   return posts;
 };
 
+const getUserPosts = async ({ userId }) => {
+  const posts = await Post.find({ userId });
+  return posts;
+};
+
 const getPostsById = async (id) => {
   const post = await Post.findById(id);
 
@@ -16,8 +21,8 @@ const getPostsById = async (id) => {
   return post;
 };
 
-const addPost = async ({ title, body }) => {
-  const post = new Post({ title, body });
+const addPost = async ({ title, body }, userId) => {
+  const post = new Post({ title, body, userId });
   await post.save();
 };
 
@@ -39,6 +44,7 @@ const deletePostById = async (id) => {
 
 module.exports = {
   getPosts,
+  getUserPosts,
   getPostsById,
   addPost,
   changePostById,

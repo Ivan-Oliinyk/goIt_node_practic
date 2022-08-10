@@ -1,5 +1,6 @@
 const {
   getPosts,
+  getUserPosts,
   getPostsById,
   addPost,
   changePostById,
@@ -8,6 +9,13 @@ const {
 
 const getAllPostsController = async (req, res) => {
   const posts = await getPosts();
+  res.status(200).json({ posts });
+};
+
+const getAllUserPostsController = async (req, res) => {
+  const { _id: userId } = req.user;
+  const posts = await getUserPosts({ userId });
+
   res.status(200).json({ posts });
 };
 
@@ -20,7 +28,9 @@ const getPostByIdController = async (req, res) => {
 
 const createPostController = async (req, res) => {
   const { title, body } = req.body;
-  const post = await addPost({ title, body });
+  const { _id: userId } = req.user;
+
+  const post = await addPost({ title, body }, userId);
 
   res.json({ status: 200, message: "Post was created!", data: post });
 };
@@ -47,6 +57,7 @@ const removePostsByIdController = async (req, res) => {
 
 module.exports = {
   getAllPostsController,
+  getAllUserPostsController,
   getPostByIdController,
   removePostsByIdController,
   createPostController,
