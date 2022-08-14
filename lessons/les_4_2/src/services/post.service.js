@@ -1,18 +1,33 @@
-const { Post } = require("@/db/postModel");
+const { Post } = require("@/models/");
+
 const { WrongParamsError } = require("@/helpers/errors");
 
-const getPosts = async () => {
-  const posts = await Post.find();
+const getPosts = async ({ page, limit, sortField, sortOrder }) => {
+  const skip = limit * (page - 1);
+
+  const posts = await Post.find()
+    .skip(skip)
+    .limit(limit)
+    .select({ __v: 0 })
+    .sort({ [sortField]: sortOrder === "desc" ? -1 : 1 });
+
   return posts;
 };
 
-const getUserPosts = async ({ userId }) => {
-  const posts = await Post.find({ userId });
+const getUserPosts = async ({ userId, page, limit, sortField, sortOrder }) => {
+  const skip = limit * (page - 1);
+
+  const posts = await Post.find({ userId }, { __v: 0 })
+    .skip(skip)
+    .limit(limit)
+    .select({ __v: 0 })
+    .sort({ [sortField]: sortOrder === "desc" ? -1 : 1 });
+
   return posts;
 };
 
 const getPostsById = async (id) => {
-  const post = await Post.findById(id);
+  const post = await Post.findById(id, { __v: 0 });
 
   if (!post) {
     throw new WrongParamsError(`Not found post with id ${id}`);
@@ -21,8 +36,8 @@ const getPostsById = async (id) => {
   return post;
 };
 
-const addPost = async ({ title, body }, userId) => {
-  const post = new Post({ title, body, userId });
+const addPost = async ({ title, body, price }, userId) => {
+  const post = new Post({ title, body, price, userId });
   await post.save();
 };
 
@@ -45,6 +60,14 @@ const deletePostById = async (id) => {
   }
 };
 
+const getPostCount = async (userId = "") => {
+  const searchParam = userId ? { userId } : {};
+
+  const count = await Post.find(searchParam).count();
+
+  return count;
+};
+
 module.exports = {
   getPosts,
   getUserPosts,
@@ -52,4 +75,5 @@ module.exports = {
   addPost,
   changePostById,
   deletePostById,
+  getPostCount,
 };

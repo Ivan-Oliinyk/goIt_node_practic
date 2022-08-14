@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("@/db/userModel");
+const { User } = require("@/models/");
 const { WrongParamsError, NotAuthorizedError } = require("@/helpers/errors");
 const { JWT_SECRET } = require("@/config/");
 
@@ -29,7 +29,8 @@ const loginService = async (email, password) => {
       _id: user.id,
       createdAt: user.createdAt,
     },
-    JWT_SECRET
+    JWT_SECRET,
+    { expiresIn: "1h" }
   );
 
   return token;

@@ -7,11 +7,16 @@ const config = require("./config");
 const { errorHandler } = require("./src/helpers");
 const swaggerUi = require("swagger-ui-express");
 const { specs } = require("./src/swagger");
+const { log } = require("@/logger");
 
 const {
   PORT,
   ROUTERS: { API, API_DOC },
 } = config;
+
+if (process.env.NODE_ENV === "development") {
+  log.info("Run developer mode");
+}
 
 const app = express();
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
@@ -29,10 +34,10 @@ const start = async () => {
     await connectMongo();
 
     app.listen(PORT, () => {
-      console.log(`Server run on port ${PORT} ...`);
+      log.http(`Server run on port ${PORT}`);
     });
   } catch (err) {
-    console.error(err.message);
+    log.error(err.message);
   }
 };
 

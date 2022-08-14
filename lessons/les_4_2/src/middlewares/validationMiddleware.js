@@ -3,8 +3,9 @@ const { ValidationError } = require("@/helpers/errors");
 
 const validationPostCreate = async (req, res, next) => {
   const schema = Joi.object({
-    title: Joi.string().min(4).max(20).required(),
-    body: Joi.string().min(10).max(40).required(),
+    title: Joi.string().min(4).max(30).required(),
+    body: Joi.string().min(10).max(400).required(),
+    price: Joi.number(),
   });
 
   const validationResult = schema.validate(req.body);
@@ -17,8 +18,9 @@ const validationPostCreate = async (req, res, next) => {
 
 const validationUpdate = async (req, res, next) => {
   const schema = Joi.object({
-    title: Joi.string().min(4).max(20),
-    body: Joi.string().min(10).max(40),
+    title: Joi.string().min(4).max(30),
+    body: Joi.string().min(10).max(400),
+    price: Joi.number(),
   });
 
   const validationResult = schema.validate(req.body);

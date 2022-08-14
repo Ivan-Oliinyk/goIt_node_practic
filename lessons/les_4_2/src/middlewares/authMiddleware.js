@@ -7,7 +7,10 @@ const authMiddleware = (req, res, next) => {
     next(new NotAuthorizedError("Please, provide a  Bearer token"));
   }
 
-  const [tokenType, token] = req.headers.authorization.split(" ");
+  const [tokenType, token] = req.headers.authorization
+    ? req.headers.authorization.split(" ")
+    : [null, null];
+
   const user = jwt.decode(token, JWT_SECRET);
 
   if (!user || tokenType !== "Bearer") {

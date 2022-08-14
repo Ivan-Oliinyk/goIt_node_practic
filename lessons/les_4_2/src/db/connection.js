@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const config = require("@/config");
+const { log } = require("@/logger");
 
 const { MONGODB_URL, DB_NAME } = config;
 
@@ -10,7 +11,7 @@ const connectMongo = async () => {
       useUnifiedTopology: true,
     })
     .then(() => {
-      console.log("Connected to mongoDB");
+      log.info("Connected to mongoDB");
     });
 };
 

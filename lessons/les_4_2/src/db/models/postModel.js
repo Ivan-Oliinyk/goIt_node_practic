@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const postSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       unique: true,
       required: true,
+      ref: "User",
     },
 
     title: {
@@ -19,6 +20,17 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
       set: toTrim,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    isVisible: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
   },
   {

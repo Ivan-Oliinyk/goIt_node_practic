@@ -5,18 +5,55 @@ const {
   addPost,
   changePostById,
   deletePostById,
+  getPostCount,
 } = require("@/services/post.service");
 
 const getAllPostsController = async (req, res) => {
-  const posts = await getPosts();
-  res.status(200).json({ posts });
+  let {
+    page = 1,
+    limit = 3,
+    sortField = "title",
+    sortOrder = "asc",
+  } = req.query;
+
+  limit = parseInt(limit) > 30 ? 30 : parseInt(limit);
+  page = parseInt(page) <= 0 ? 1 : parseInt(page);
+  sortField = sortField.toLowerCase();
+  sortOrder = sortOrder.toLowerCase();
+
+  const count = await getPostCount();
+
+  const posts = await getPosts({ page, limit, sortField, sortOrder });
+
+  res.set({ "Posts-Length": count, "Post-Page": page, "Post-Limit": limit });
+  res.status(200).json({ posts, count, page, limit });
 };
 
 const getAllUserPostsController = async (req, res) => {
   const { _id: userId } = req.user;
-  const posts = await getUserPosts({ userId });
+  let {
+    page = 1,
+    limit = 3,
+    sortField = "title",
+    sortOrder = "asc",
+  } = req.query;
 
-  res.status(200).json({ posts });
+  limit = parseInt(limit) > 30 ? 30 : parseInt(limit);
+  page = parseInt(page) <= 0 ? 1 : parseInt(page);
+  sortField = sortField.toLowerCase();
+  sortOrder = sortOrder.toLowerCase();
+
+  const count = await getPostCount(userId);
+
+  const posts = await getUserPosts({
+    userId,
+    page,
+    limit,
+    sortField,
+    sortOrder,
+  });
+
+  res.status(200).json({ posts, count, page, limit });
 };
 
 const getPostByIdController = async (req, res) => {
@@ -27,10 +64,10 @@ const getPostByIdController = async (req, res) => {
 };
 
 const createPostController = async (req, res) => {
-  const { title, body } = req.body;
+  const { title, body, price } = req.body;
   const { _id: userId } = req.user;
 
-  const post = await addPost({ title, body }, userId);
+  const post = await addPost({ title, body, price }, userId);
 
   res.json({ status: 200, message: "Post was created!", data: post });
 };
