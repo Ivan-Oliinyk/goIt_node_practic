@@ -7,6 +7,8 @@ const config = {
   DB_NAME: "goIt",
   JWT_SECRET: process.env.JWT_SECRET,
   UPLOAD_DIR_NAME: "tmp",
+  GOOGLE_BUCKET_NAME: "goittest-2022",
+  GOOGLE_CLOUD_API: "https://storage.cloud.google.com/",
 
   ROUTERS: {
     API: "/api",

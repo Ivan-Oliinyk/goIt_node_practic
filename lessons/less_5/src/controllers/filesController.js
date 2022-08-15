@@ -1,4 +1,3 @@
-const { log } = require("@/logger");
 const {
   ROUTERS: { UPLOAD_DIR_PATH },
 } = require("@/config");

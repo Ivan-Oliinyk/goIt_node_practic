@@ -1,9 +1,10 @@
 // Imports the Google Cloud client library
 const { Storage } = require("@google-cloud/storage");
 const { log } = require("@/logger");
+const { GOOGLE_BUCKET_NAME } = require("@/config");
 
 const storage = new Storage();
-const bucketName = "goittest-2022";
+const bucketName = GOOGLE_BUCKET_NAME;
 
 const filePath = "./tmp/a379d4e0-7f6b-449c-bdf5-53beb7acb973.jpeg";
 const destFileName = "a379d4e0-7f6b-449c-bdf5-53beb7acb973.jpeg";

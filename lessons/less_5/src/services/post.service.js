@@ -1,6 +1,5 @@
-const { Post } = require("@/models/");
-
-const { WrongParamsError } = require("@/helpers/errors");
+const { Post } = require("../db/models");
+const { WrongParamsError } = require("../helpers/errors");
 
 const getPosts = async ({ page, limit, sortField, sortOrder }) => {
   const skip = limit * (page - 1);

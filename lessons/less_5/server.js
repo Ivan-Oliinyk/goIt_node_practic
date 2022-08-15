@@ -11,6 +11,7 @@ const { log } = require("@/logger");
 
 const {
   PORT,
+  UPLOAD_DIR_NAME,
   ROUTERS: { API, API_DOC },
 } = config;
 
@@ -28,6 +29,7 @@ app.use(logger(formatsLogger));
 app.use(API, routers);
 app.use(API_DOC, swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorHandler);
+app.use(express.static(UPLOAD_DIR_NAME));
 
 const start = async () => {
   try {
